@@ -1,3 +1,5 @@
+import gleam/list
+
 pub fn place_location_to_treasure_location(
   place_location: #(String, Int),
 ) -> #(Int, String) {
@@ -19,7 +21,16 @@ pub fn count_place_treasures(
   place: #(String, #(String, Int)),
   treasures: List(#(String, #(Int, String))),
 ) -> Int {
-  todo
+  let place_of_treasure = case place {
+    #(my_place, #(location, value)) -> place_location_to_treasure_location(#(location, value))
+    _ -> #(0, "")
+  }
+
+  treasures
+  |> list.filter(fn(treasure) { treasure.1  == place_of_treasure})
+
+  list.length(treasures)
+
 }
 
 pub fn special_case_swap_possible(
