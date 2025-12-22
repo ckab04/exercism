@@ -38,5 +38,13 @@ pub fn special_case_swap_possible(
   place: #(String, #(String, Int)),
   desired_treasure: #(String, #(Int, String)),
 ) -> Bool {
-  todo
+  let #(f, p, d) = #(found_treasure.0, place.0, desired_treasure.0)
+    f == "Brass Spyglass"
+    && p == "Abandoned Lighthouse"
+    || f == "Amethyst Octopus"
+    && p == "Stormy Breakwater"
+    && { d == "Crystal Crab" || d == "Glass Starfish" }
+    || f == "Vintage Pirate Hat"
+    && p == "Harbor Managers Office"
+    && { d == "Model Ship in Large Bottle" || d == "Antique Glass Fishnet Float" }
 }
