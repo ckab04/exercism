@@ -42,25 +42,28 @@ pub fn pair(full_name1: String, full_name2: String) {
   //            **   **
   //              ***
   //               *
- let model =
-  "      ******       ******
-      **      **   **      **
-    **         ** **         **
-   **            *            **
-   **                         **
-   **     X. X.  +  X. X.     **
-    **                       **
-      **                   **
-        **               **
-          **           **
-            **       **
-              **   **
-                ***
-                 *
-  "
+
   let f_n1 = full_name1 |> initials
   let f_n2 = full_name2 |> initials
 
-  let model1 = string.replace(model, "X. X.", f_n1)
-  string.replace(model1, "X. X.", f_n2)
+
+
+  let result =  f_n1  <> "  +  " <>  f_n2
+  echo result
+
+
+
+
+
+"\n     ******       ******\n" <> "   **      **   **      **\n"
+<> " **         ** **         **\n" <> "**            *            **\n"
+<> "**                         **\n" <> "**     "
+<> result
+<> "     **\n" <> " **                       **\n"
+<> "   **                   **\n" <> "     **               **\n"
+<> "       **           **\n" <> "         **       **\n" <> "           **   **\n"
+<> "             ***\n" <> "              *\n"
+
+  //let model1 = string.replace(model, "X. X.", f_n1)
+  //string.replace(model1, "X. X.", f_n2)
 }
