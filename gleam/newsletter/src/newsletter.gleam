@@ -3,7 +3,11 @@ import gleam/list
 import simplifile
 
 pub fn read_emails(path: String) -> Result(List(String), Nil) {
-  use content <- simplifile.read(path)
+
+  let content = case  simplifile.read(path) {
+    Ok(value) -> value
+    _ -> ""
+  }
 
   content
   |>string.split("\n")
@@ -18,7 +22,10 @@ pub fn create_log_file(path: String) -> Result(Nil, Nil) {
 
 pub fn log_sent_email(path: String, email: String) -> Result(Nil, Nil) {
   let content = email <> "\n"
-  simplifile.write(path, content)
+  case simplifile.append(path, content){
+    Ok(_) -> Ok(Nil)
+    _ -> Error(Nil)
+  }
 }
 
 pub fn send_newsletter(
@@ -29,14 +36,20 @@ pub fn send_newsletter(
   //use content <- read_emails(emails_path)
   let content = case read_emails(emails_path){
     Ok(x) -> x
-    Error(y) -> []
+    Error(_) -> []
   }
 
   content
   |>list.each(fn(mail){
     case send_email(mail){
-      Ok(_) -> simplifile.write(log_path, mail)
-      _ -> Error(_)
+      Ok(_) -> {
+        case simplifile.write(log_path, mail){
+          Ok(_) -> Ok(Nil)
+          _ -> Error(Nil)
+        }
+
+      }
+      _ -> Error(Nil)
     }
   })
 
