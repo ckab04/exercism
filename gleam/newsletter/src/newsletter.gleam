@@ -1,6 +1,7 @@
 import gleam/string
 import gleam/list
 import simplifile
+import gleam/result
 
 pub fn read_emails(path: String) -> Result(List(String), Nil) {
 
@@ -10,6 +11,7 @@ pub fn read_emails(path: String) -> Result(List(String), Nil) {
   }
 
   content
+  |>string.trim
   |>string.split("\n")
   |>list.map(string.trim)
   |> Ok
@@ -33,27 +35,15 @@ pub fn send_newsletter(
   log_path: String,
   send_email: fn(String) -> Result(Nil, Nil),
 ) -> Result(Nil, Nil) {
-  //use content <- read_emails(emails_path)
-  let content = case read_emails(emails_path){
-    Ok(x) -> x
-    Error(_) -> []
-  }
+  use _ <- result.try(create_log_file(log_path))
+  use emails <- result.try(read_emails(emails_path))
 
-  content
-  |>list.each(fn(mail){
-    case send_email(mail){
-      Ok(_) -> {
-        case simplifile.write(log_path, mail){
-          Ok(_) -> Ok(Nil)
-          _ -> Error(Nil)
-        }
+  list.each(emails, fn(email) {
+use _ <- result.try(send_email(email))
+ log_sent_email(log_path, email)
+})
+ Ok(Nil)
 
-      }
-      _ -> Error(Nil)
-    }
-  })
-
-  Ok(Nil)
 }
 
 fn send_email(mail: String) -> Result(Nil, Nil){
